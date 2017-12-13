@@ -6,10 +6,11 @@ using API.Infrastructure;
 
 namespace API.Query
 {
-  public class QueryService : IQueryService
+  public class TemperatureQueryService : ITemperatureQueryService
   {
-    private readonly IRepository repository;
-    public QueryService(IRepository repository)
+    private readonly IRepository<TemperatureReading> repository;
+
+    public TemperatureQueryService(IRepository<TemperatureReading>  repository)
     {
       this.repository = repository;
 

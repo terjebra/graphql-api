@@ -11,28 +11,28 @@ using Microsoft.Extensions.Logging;
 
 namespace API.Infrastructure
 {
-    public class InMemoryRepository : IRepository
+    public class InMemoryTemperatureRepository :  IRepository<TemperatureReading>
     {
       private readonly IList<TemperatureReading> _readings;
 
-      public InMemoryRepository()
+      public InMemoryTemperatureRepository()
       {
           _readings = new List<TemperatureReading>();
       }
 
-    public IList<TemperatureReading> GetAll()
-    {
-     return _readings;
-    }
+      public IList<TemperatureReading> GetAll()
+      {
+      return _readings;
+      }
 
-    public TemperatureReading Get(string id)
-    {
-      return _readings.FirstOrDefault(x => x.Id.Equals(id));
-    }
+      public TemperatureReading Get(string id)
+      {
+        return _readings.FirstOrDefault(x => x.Id.Equals(id));
+      }
 
-    public void Save(TemperatureReading reading)
-    {
-      _readings.Add(reading);
-    }
+      public void Save(TemperatureReading reading)
+      {
+        _readings.Add(reading);
+      }
   }
 }

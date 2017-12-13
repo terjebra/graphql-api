@@ -11,10 +11,11 @@ using Microsoft.Extensions.Logging;
 
 namespace API.Infrastructure
 {
-    public interface IRepository
+    public interface IRepository<T>
     {
-      void Save(TemperatureReading reading);
-      IList<TemperatureReading> GetAll();
-      TemperatureReading Get(string id);
+      void Save(T reading);
+      IList<T> GetAll();
+      T Get(string id);
+
     }
 }

@@ -1,0 +1,42 @@
+mutation registerReadning {
+  registerReading(temperatureReading: {temperature: 23.3}) {
+    id
+  }
+}
+
+query getTemperatureReadings {
+  temperatureReadings {
+    id
+  }
+}
+
+query getTemperatureReading {
+  temperatureReading(id: "9a3bedfc-c3dd-4419-88f8-6b929d7af37f") {
+    id
+  }
+}
+
+mutation registerRoom {
+  registerRoom(room: {name: "Stue"}) {
+    id
+    name
+  }
+}
+
+query getRooms {
+  rooms {
+    id
+    name
+  }
+}
+
+query getRoomsAndTemperatureReadnings {
+  rooms {
+    id
+    name
+  }
+  temperatureReadings {
+    id
+    temperature
+  }
+}

@@ -7,28 +7,46 @@ namespace API.GraphQL
 {
   public class Mutation : ObjectGraphType<object>
   {
-    private readonly ICommandService commandService;
-    private readonly IQueryService queryService;
-    public Mutation(ICommandService commandService,
-     IQueryService queryService)
-    {
-      this.commandService = commandService;
-      this.queryService = queryService;
-      Name = "Mutation";
+        private readonly ITemperatureCommandService temperatureCommandService;
+        private readonly ITemperatureQueryService temperatureQueryService;
+        private readonly IRoomCommandService roomCommandService;
+        private readonly IRoomQueryService roomQueryService;
 
-    
-      Field<TemperatureReading>(
-        "registerReading",
-        arguments: new QueryArguments(
-            new QueryArgument<NonNullGraphType<RegisterTemperatureReading>> {Name = "temperatureReading"}
-        ),
-        resolve: context =>
+        public Mutation(
+            ITemperatureCommandService temperatureCommandService,
+            ITemperatureQueryService temperatureQueryService,
+            IRoomCommandService roomCommandService,
+            IRoomQueryService roomQueryService)
         {
-            var command = context.GetArgument<API.Command.Commands.RegisterTemperatureReading>("temperatureReading");
-            
-            var id = this.commandService.RegisterReading(command);
-            return queryService.GetById(id);
-        });
+            this.temperatureCommandService = temperatureCommandService;
+            this.temperatureQueryService = temperatureQueryService;
+            this.roomCommandService = roomCommandService;
+            this.roomQueryService = roomQueryService;
+            Name = "Mutation";
+
+            Field<TemperatureReading>(
+                "registerReading",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<RegisterTemperatureReading>> {Name = "temperatureReading"}
+                ),
+                resolve: context =>
+                {
+                    var command = context.GetArgument<API.Command.Commands.RegisterTemperatureReading>("temperatureReading");
+                    var id = this.temperatureCommandService.RegisterReading(command);
+                    return this.temperatureQueryService.GetById(id);
+                });
+
+            Field<Room>(
+                "registerRoom",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<RegisterRoom>> {Name = "room"}
+                ),
+                resolve: context =>
+                {
+                    var command = context.GetArgument<API.Command.Commands.RegisterRoom>("room");
+                    var id = this.roomCommandService.RegisterRoom(command);
+                    return this.roomQueryService.GetById(id);
+                });
     }
   }
 }

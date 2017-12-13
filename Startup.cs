@@ -31,22 +31,23 @@ namespace API
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
 
-            services.AddSingleton<IRepository, InMemoryRepository>();
-            services.AddScoped<ICommandService, CommandService>();
-            services.AddScoped<IQueryService, QueryService>();
+            services.AddSingleton<IRepository<Domain.TemperatureReading>, InMemoryTemperatureRepository>();
+            services.AddSingleton<IRepository<Domain.Room>, InMemoryRoomRepository>();
+            services.AddScoped<ITemperatureCommandService,TemperatureCommandService>();
+            services.AddScoped<IRoomCommandService,RoomCommandService>();
+            services.AddScoped<ITemperatureQueryService, TemperatureQueryService>();
+            services.AddScoped<IRoomQueryService, RoomQueryService>();
             services.AddScoped<API.GraphQL.Query>();
             services.AddScoped<Mutation>();
             services.AddScoped<TemperatureReading>();
+            services.AddScoped<Room>();
             services.AddScoped<GraphQL.Types.RegisterTemperatureReading>();
-
-
+            services.AddScoped<GraphQL.Types.RegisterRoom>();
 
             services.AddScoped<ISchema>(
                 s => new APISchema(new FuncDependencyResolver(type => (GraphType) s.GetService(type))));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

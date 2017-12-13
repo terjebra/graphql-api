@@ -7,22 +7,35 @@ namespace API.GraphQL
 {
   public class Query : ObjectGraphType<object>
   {
-    private readonly IQueryService queryService;
-    public Query(IQueryService queryService)
+    private readonly ITemperatureQueryService temperatureQueryService;
+    private readonly IRoomQueryService roomQueryService;
+
+    public Query(ITemperatureQueryService temperatureQueryService, IRoomQueryService roomQueryService)
     {
-      this.queryService = queryService;
+      this.temperatureQueryService = temperatureQueryService;
+      this.roomQueryService = roomQueryService;
       Name = "Query";
 
       
       Field<ListGraphType<TemperatureReading>>("temperatureReadings",
-        resolve: context => queryService.GetAll());
+        resolve: context => temperatureQueryService.GetAll());
 
 
       Field<TemperatureReading>("temperatureReading", 
        arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id", Description = "id of the human" }
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id", Description = "id of the reading" }
                 ),
-        resolve: context => queryService.GetById(context.GetArgument<string>("id"))
+        resolve: context => temperatureQueryService.GetById(context.GetArgument<string>("id"))
+      );
+
+      Field<ListGraphType<Room>>("rooms",
+        resolve: context => roomQueryService.GetAll());
+
+
+      Field<Room>("room",
+        arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "id", Description = "id of the room" } ),
+        resolve: context => roomQueryService.GetById(context.GetArgument<string>("id"))
       );
     }
     
