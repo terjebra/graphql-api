@@ -1,4 +1,5 @@
 using API.Command;
+using API.Event;
 using API.GraphQL.Types;
 using API.Query;
 using GraphQL.Types;
@@ -11,17 +12,21 @@ namespace API.GraphQL
         private readonly ITemperatureQueryService temperatureQueryService;
         private readonly IRoomCommandService roomCommandService;
         private readonly IRoomQueryService roomQueryService;
+         private readonly IEventHandler eventHandler;
 
-        public Mutation(
+    public Mutation(
             ITemperatureCommandService temperatureCommandService,
             ITemperatureQueryService temperatureQueryService,
             IRoomCommandService roomCommandService,
-            IRoomQueryService roomQueryService)
+            IRoomQueryService roomQueryService,
+            IEventHandler eventHandler)
         {
             this.temperatureCommandService = temperatureCommandService;
             this.temperatureQueryService = temperatureQueryService;
             this.roomCommandService = roomCommandService;
             this.roomQueryService = roomQueryService;
+            this.eventHandler = eventHandler;
+            
             Name = "Mutation";
 
             Field<TemperatureReading>(
@@ -45,7 +50,9 @@ namespace API.GraphQL
                 {
                     var command = context.GetArgument<API.Command.Commands.RegisterRoom>("room");
                     var id = this.roomCommandService.RegisterRoom(command);
-                    return this.roomQueryService.GetById(id);
+                    var room =  this.roomQueryService.GetById(id);
+                    eventHandler.AddRoom(room);
+                    return room;
                 });
     }
   }

@@ -1,3 +1,4 @@
+using API.Query;
 using GraphQL;
 using GraphQL.Types;
 
@@ -10,6 +11,7 @@ namespace API.GraphQL
         {
             Query = resolver.Resolve<Query>();
             Mutation = resolver.Resolve<Mutation>();
+            Subscription = resolver.Resolve<Subscription>();
         }
     }
 }
